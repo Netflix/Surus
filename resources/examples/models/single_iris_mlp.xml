@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PMML version="4.1" xmlns="http://www.dmg.org/PMML-4_1">
+  <Header copyright="KNIME">
+    <Application name="KNIME" version="2.8.0"/>
+  </Header>
+  <DataDictionary numberOfFields="5">
+    <DataField dataType="double" name="sepal_length" optype="continuous">
+      <Interval closure="closedClosed" leftMargin="4.3" rightMargin="7.9"/>
+    </DataField>
+    <DataField dataType="double" name="sepal_width" optype="continuous">
+      <Interval closure="closedClosed" leftMargin="2.0" rightMargin="4.4"/>
+    </DataField>
+    <DataField dataType="double" name="petal_length" optype="continuous">
+      <Interval closure="closedClosed" leftMargin="1.0" rightMargin="6.9"/>
+    </DataField>
+    <DataField dataType="double" name="petal_width" optype="continuous">
+      <Interval closure="closedClosed" leftMargin="0.1" rightMargin="2.5"/>
+    </DataField>
+    <DataField dataType="string" name="class" optype="categorical">
+      <Value value="Iris-setosa"/>
+      <Value value="Iris-versicolor"/>
+      <Value value="Iris-virginica"/>
+    </DataField>
+  </DataDictionary>
+  <TransformationDictionary/>
+  <NeuralNetwork functionName="classification" algorithmName="RProp" activationFunction="logistic" normalizationMethod="none" width="0.0" numberOfLayers="2">
+    <MiningSchema>
+      <MiningField name="sepal_length" invalidValueTreatment="asIs"/>
+      <MiningField name="sepal_width" invalidValueTreatment="asIs"/>
+      <MiningField name="petal_length" invalidValueTreatment="asIs"/>
+      <MiningField name="petal_width" invalidValueTreatment="asIs"/>
+      <MiningField name="class" invalidValueTreatment="asIs" usageType="predicted"/>
+    </MiningSchema>
+    <LocalTransformations>
+      <DerivedField dataType="double" displayName="sepal_length" name="sepal_length*" optype="continuous">
+        <Extension extender="KNIME" name="summary" value="Z-Score (Gaussian) normalization on 4 column(s)"/>
+        <NormContinuous field="sepal_length">
+          <LinearNorm norm="-7.056602288035726" orig="0.0"/>
+          <LinearNorm norm="-5.848969266694757" orig="1.0"/>
+        </NormContinuous>
+      </DerivedField>
+      <DerivedField dataType="double" displayName="sepal_width" name="sepal_width*" optype="continuous">
+        <Extension extender="KNIME" name="summary" value="Z-Score (Gaussian) normalization on 4 column(s)"/>
+        <NormContinuous field="sepal_width">
+          <LinearNorm norm="-7.043450340493851" orig="0.0"/>
+          <LinearNorm norm="-4.737147020096389" orig="1.0"/>
+        </NormContinuous>
+      </DerivedField>
+      <DerivedField dataType="double" displayName="petal_length" name="petal_length*" optype="continuous">
+        <Extension extender="KNIME" name="summary" value="Z-Score (Gaussian) normalization on 4 column(s)"/>
+        <NormContinuous field="petal_length">
+          <LinearNorm norm="-2.130255705592192" orig="0.0"/>
+          <LinearNorm norm="-1.5634973589465222" orig="1.0"/>
+        </NormContinuous>
+      </DerivedField>
+      <DerivedField dataType="double" displayName="petal_width" name="petal_width*" optype="continuous">
+        <Extension extender="KNIME" name="summary" value="Z-Score (Gaussian) normalization on 4 column(s)"/>
+        <NormContinuous field="petal_width">
+          <LinearNorm norm="-1.5706608073093793" orig="0.0"/>
+          <LinearNorm norm="-0.26032086795227816" orig="1.0"/>
+        </NormContinuous>
+      </DerivedField>
+    </LocalTransformations>
+    <NeuralInputs numberOfInputs="4">
+      <NeuralInput id="0,0">
+        <DerivedField optype="continuous" dataType="double">
+          <FieldRef field="sepal_length*"/>
+        </DerivedField>
+      </NeuralInput>
+      <NeuralInput id="0,1">
+        <DerivedField optype="continuous" dataType="double">
+          <FieldRef field="sepal_width*"/>
+        </DerivedField>
+      </NeuralInput>
+      <NeuralInput id="0,2">
+        <DerivedField optype="continuous" dataType="double">
+          <FieldRef field="petal_length*"/>
+        </DerivedField>
+      </NeuralInput>
+      <NeuralInput id="0,3">
+        <DerivedField optype="continuous" dataType="double">
+          <FieldRef field="petal_width*"/>
+        </DerivedField>
+      </NeuralInput>
+    </NeuralInputs>
+    <NeuralLayer>
+      <Neuron id="1,0" bias="40.4715596724959">
+        <Con from="0,0" weight="0.8176653427717075"/>
+        <Con from="0,1" weight="-9.220948533282769"/>
+        <Con from="0,2" weight="26.50745889288644"/>
+        <Con from="0,3" weight="46.892366529773696"/>
+      </Neuron>
+      <Neuron id="1,1" bias="42.07393631555714">
+        <Con from="0,0" weight="0.7673281834576293"/>
+        <Con from="0,1" weight="-11.442725010790134"/>
+        <Con from="0,2" weight="27.536429596116776"/>
+        <Con from="0,3" weight="50.32390234180563"/>
+      </Neuron>
+      <Neuron id="1,2" bias="-4.682714809598759">
+        <Con from="0,0" weight="-0.48068857982178426"/>
+        <Con from="0,1" weight="-0.6949378788387349"/>
+        <Con from="0,2" weight="3.5130145878230925"/>
+        <Con from="0,3" weight="3.374852329493185"/>
+      </Neuron>
+    </NeuralLayer>
+    <NeuralLayer>
+      <Neuron id="2,0" bias="36.829174221809204">
+        <Con from="1,0" weight="-15.428606782109018"/>
+        <Con from="1,1" weight="-58.68586577113855"/>
+        <Con from="1,2" weight="-4.533681748641222"/>
+      </Neuron>
+      <Neuron id="2,1" bias="-3.832065207474468">
+        <Con from="1,0" weight="4.803555297576479"/>
+        <Con from="1,1" weight="4.858790438015236"/>
+        <Con from="1,2" weight="-12.562463287384077"/>
+      </Neuron>
+      <Neuron id="2,2" bias="-6.330825024982664">
+        <Con from="1,0" weight="0.08902632905447753"/>
+        <Con from="1,1" weight="0.12439444541826992"/>
+        <Con from="1,2" weight="13.13076076007838"/>
+      </Neuron>
+    </NeuralLayer>
+    <NeuralOutputs numberOfOutputs="3">
+      <NeuralOutput outputNeuron="2,0">
+        <DerivedField optype="categorical" dataType="string">
+          <NormDiscrete field="class" value="Iris-setosa"/>
+        </DerivedField>
+      </NeuralOutput>
+      <NeuralOutput outputNeuron="2,1">
+        <DerivedField optype="categorical" dataType="string">
+          <NormDiscrete field="class" value="Iris-versicolor"/>
+        </DerivedField>
+      </NeuralOutput>
+      <NeuralOutput outputNeuron="2,2">
+        <DerivedField optype="categorical" dataType="string">
+          <NormDiscrete field="class" value="Iris-virginica"/>
+        </DerivedField>
+      </NeuralOutput>
+    </NeuralOutputs>
+  </NeuralNetwork>
+</PMML>

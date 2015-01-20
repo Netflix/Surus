@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PMML version="4.0" xmlns="http://www.dmg.org/PMML-4_0">
+  <Header copyright="DMG">
+    <Application name="KNIME" version="2.6.2"/>
+  </Header>
+  <DataDictionary numberOfFields="7">
+    <DataField name="latitude" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="-8.28" rightMargin="8.97"/>
+    </DataField>
+    <DataField name="longitude" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="-179.97" rightMargin="179.8"/>
+    </DataField>
+    <DataField name="zon_winds" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="-8.9" rightMargin="7.0"/>
+    </DataField>
+    <DataField name="mer_winds" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="-6.4" rightMargin="7.1"/>
+    </DataField>
+    <DataField name="humidity" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="27.58" rightMargin="99.4"/>
+    </DataField>
+    <DataField name="airtemp" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="22.72" rightMargin="30.04"/>
+    </DataField>
+    <DataField name="s_s_temp" optype="continuous" dataType="double">
+      <Interval closure="closedClosed" leftMargin="22.44" rightMargin="30.34"/>
+    </DataField>
+  </DataDictionary>
+  <RegressionModel functionName="regression" algorithmName="LinearRegression" modelName="KNIME Linear Regression" targetFieldName="airtemp">
+    <MiningSchema>
+      <MiningField name="latitude" invalidValueTreatment="asIs"/>
+      <MiningField name="longitude" invalidValueTreatment="asIs"/>
+      <MiningField name="zon_winds" invalidValueTreatment="asIs"/>
+      <MiningField name="mer_winds" invalidValueTreatment="asIs"/>
+      <MiningField name="humidity" invalidValueTreatment="asIs"/>
+      <MiningField name="s_s_temp" invalidValueTreatment="asIs"/>
+      <MiningField name="airtemp" invalidValueTreatment="asIs" usageType="predicted"/>
+    </MiningSchema>
+    <RegressionTable intercept="6.008706171265235">
+      <NumericPredictor name="latitude" coefficient="3.363167396766842E-4"/>
+      <NumericPredictor name="longitude" coefficient="1.238009786077277E-4"/>
+      <NumericPredictor name="zon_winds" coefficient="-0.07364295448649694"/>
+      <NumericPredictor name="mer_winds" coefficient="-0.04315230485415502"/>
+      <NumericPredictor name="humidity" coefficient="-0.011583900555823673"/>
+      <NumericPredictor name="s_s_temp" coefficient="0.7840777698224044"/>
+    </RegressionTable>
+  </RegressionModel>
+</PMML>
