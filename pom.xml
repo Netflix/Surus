@@ -17,13 +17,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>netflix-ext-releasess</id>
-      <name>artifacts-ext-releases</name>
-      <url>http://artifacts.netflix.com/ext-releases-local</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.jpmml</groupId>
@@ -37,8 +30,8 @@
 	    <scope>test</scope>
 	</dependency>
     <dependency>
-      <groupId>amazon</groupId>
-      <artifactId>hadoop-core-emr</artifactId>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
       <version>1.0.3</version>
       <scope>provided</scope>
     </dependency>

@@ -1,4 +1,4 @@
-package com.netflix.pmml;
+package org.surus.pig;
 
 import java.io.File;
 import java.io.IOException;

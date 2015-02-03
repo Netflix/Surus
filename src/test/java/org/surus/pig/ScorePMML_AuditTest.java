@@ -1,4 +1,4 @@
-package com.netflix.pmml.open;
+package org.surus.pig;
 
 import static org.junit.Assert.*;
 
@@ -15,9 +15,8 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
 import org.junit.*;
+import org.surus.pig.ScorePMML;
 import org.xml.sax.SAXException;
-
-import com.netflix.pmml.ScorePMML;
 
 public class ScorePMML_AuditTest {
 
