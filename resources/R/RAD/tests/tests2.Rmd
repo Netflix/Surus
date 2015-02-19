@@ -1,0 +1,103 @@
+---
+output:
+  pdf_document:
+    fig_width: 9
+  html_document:
+    fig_width: 9
+---
+Robust Anomaly Detection Test Suite 2: Multiple Anomalous Periods
+========================================================
+
+```{r global_options, include=FALSE}
+library(knitr)
+opts_chunk$set(echo=FALSE)
+```
+
+```{r, include=FALSE}
+require(RAD)
+require(ggplot2)
+source("../R/multiplot.R")
+source("../R/anomaly_detection_ma.R")
+```
+
+Setup a 10 week long signal with weekly periodicity.
+There are no trends or noise.
+An anomaly occurs on days 45,46,47 and again on 69 and 70.
+The moving average detects a spurious anomaly
+```{r}
+frequency = 7
+numPeriods = 10
+ts.sinusoidal = sin((2 * pi / frequency ) * 1:(numPeriods * frequency))
+
+#Periodic
+#good
+ts = ts.sinusoidal
+ts[69:70] = 100
+ts[45:47] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts)) + theme_grey(base_size = 20)
+multiplot(p1,p2,cols=2)
+```
+
+Setup a 10 week long signal with weekly periodicity.
+There is a consistent increasing linear trend.
+An anomaly occurs on days 45, 46, 47, and again on 69 and 70 at the end of the window.
+The moving average detects a spurious anomaly
+```{r}
+#Periodic + trend
+#Bad
+#No anomaly detected unless removing trend line
+ts = ts.sinusoidal + 1:length(ts.sinusoidal)
+ts[69:70] = 100
+ts[45:47] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size=25)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```
+
+Setup a 10 week long signal with no periodicity.
+The signal is the cumulative sum of random noise.
+An anomaly occurs on days 47,48,49 and again on 68, 69 and 70 at the end of the window.
+RPCA can only detect the anomaly when using differences, because
+the accumulation of noise is like a linear trend.
+The moving average detects the anomalies correctly only when using
+the undifferenced series, but still has many false positives
+```{r}
+#Random process
+#Bad
+#No anomaly detected unless removing trend line
+#MA technique confused here
+set.seed(100)
+ts = cumsum(rnorm(70, 1, 4))
+ts[68:70] = 100
+ts[47:49] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```
+
+Setup a 10 week long signal with no periodicity.
+The signal is the cumulative sum of the cumulative sum of random noise
+An anomaly occurs on days 10,11,12,13,14 and again on 50, 51, and 52.
+RPCA can only detect the anomaly when using differences, because
+the accumulation of noise is like a linear trend.
+Both techniques pick up spurious anomalies, but Robust AD has fewer
+false positives
+```{r}
+#Sum of two random processes
+#Bad
+#No anomaly detected unless removing trend line
+set.seed(100)
+ts = cumsum(rnorm(70, 1, 1) + rnorm(70, 5, 5))
+ts[50:52] = 100
+ts[10:14] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff = T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```

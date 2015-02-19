@@ -1,0 +1,20 @@
+Package: RAD
+Type: Package
+Title: Robust Anomaly Detection
+Version: 1.0
+Date: 2015-02-19
+Authors@R: person("Jeffrey", "Wong", email = "jeffreyw@netflix.com",
+    role = c("aut", "cre"))
+Description: Anomaly detection in time series data. Contains fast and easy to
+    use C++ implementation of Robust Principal Component Pursuit, which is used
+    to decompose a time series into a smooth component, a noise component, and
+    a sparse component of anomalies. This package will grow to serve other
+    types of anomalies, such as anomalies in histograms and curves.
+License: Apache License version 2.0
+Imports:
+    Rcpp (>= 0.11.2),
+    RcppEigen,
+    tseries,
+    ggplot2
+LinkingTo: Rcpp, RcppEigen
+NeedsCompilation: yes

@@ -1,0 +1,102 @@
+---
+output:
+  pdf_document:
+    fig_width: 9
+---
+Robust Anomaly Detection Test Suite 1: Single Anomalous Periods
+--------------------------------------------------------
+
+The following is a comparison of Robust Anomaly Detection vs a moving average with standard deviation.  A series of graphs are presented where red dots will flag the anomaly.  The graphs are always arranged as follows:
+
+- Top left = moving average with standard deviation on raw data
+
+- Bottom left = moving average with standard deviation on day to day changes (differenced) data
+
+- Top right = Robust Anomaly Detection on raw data
+
+- Bottom right = Robust Anomaly Detection on day to day changes
+
+```{r global_options, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(echo=FALSE)
+```
+
+```{r, include=FALSE}
+require(RAD)
+require(ggplot2)
+source("../R/multiplot.R")
+source("../R/anomaly_detection_ma.R")
+```
+
+Setup a 10 week long signal with weekly periodicity.
+There are no trends or noise.
+An anomaly occurs on days 58, 59, and 60.
+Both moving average and RPCA catch the anomaly
+```{r}
+frequency = 7
+numPeriods = 10
+ts.sinusoidal = sin((2 * pi / frequency ) * 1:(numPeriods * frequency))
+
+#Periodic data, two outliers next to each other
+#Both algorithms detect outlier
+ts = ts.sinusoidal
+ts = sin((2 * pi / frequency ) * 1:(numPeriods * frequency))
+ts[58:60] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff = F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff = T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols = 2)
+```
+
+Setup a 10 week long signal with weekly periodicity.
+There is a consistent increasing linear trend.
+An anomaly occurs on on days 69 and 70 at the end of the window.
+Both moving average and RPCA catch the anomaly, although the
+moving average has extra false positives
+```{r}
+ts = ts.sinusoidal + 1:length(ts.sinusoidal) + rnorm(70)
+ts[69:70] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size=25)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```
+
+Setup a 10 week long signal with no periodicity.
+The signal is the cumulative sum of random noise.
+An anomaly occurs on days 69 and 70 at the end of the window.
+RPCA can only detect the anomaly when using differences, because
+the accumulation of noise is like a linear trend.
+The moving average cannot detect the anomaly
+```{r}
+#Random process
+#RPCA cannot detect without autodiff
+#Average detects spurious anomaly
+set.seed(100)
+ts = cumsum(rnorm(70, 1, 1))
+ts[68:70] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```
+
+Setup a 10 week long signal with no periodicity.
+The signal is the cumulative sum of the cumulative sum of random noise
+An anomaly occurs on days 50, 51, and 52.
+RPCA can only detect the anomaly when using differences, because
+the accumulation of noise is like a linear trend.
+The moving average cannot detect the anomaly
+```{r}
+set.seed(100)
+ts = cumsum(cumsum(rnorm(70, 5, 5)))
+ts[50:52] = 100
+p1 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(ts)) + theme_grey(base_size = 20)
+p2 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=F)) + theme_grey(base_size = 20)
+p3 = ggplot_AnomalyDetection.ma(AnomalyDetection.ma(c(0, diff(ts)))) + theme_grey(base_size = 20)
+p4 = ggplot_AnomalyDetection.rpca(AnomalyDetection.rpca(ts, autodiff=T)) + theme_grey(base_size = 20)
+multiplot(p1,p3,p2,p4,cols=2)
+```
