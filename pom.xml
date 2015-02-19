@@ -6,11 +6,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>netflix</groupId>
-  <artifactId>scoring</artifactId>
-  <version>0.1.2</version>
+  <artifactId>surus</artifactId>
+  <version>0.1.4</version>
   <packaging>jar</packaging>
 
-  <name>scoring</name>
+  <name>surus</name>
   <url>http://maven.apache.org</url>
 
   <properties>
