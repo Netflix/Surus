@@ -1,6 +1,7 @@
 package org.surus.math;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -20,6 +21,11 @@ public class RPCA_Test {
 	  boolean testOutput = true;
 	  int printCnt = 0;
 	  
+	  if (!(X[0].length == Y[0].length && X.length == Y.length)) {
+		  System.out.println("X and Y matrices had differing dimensions.");
+		  return false;
+	  }
+
 	  for (int j = 0; j < X[0].length; j++) {
 		  for (int i = 0; i < X.length; i++) {
 			  if (Math.abs(X[i][j] - Y[i][j]) > epsilon) {
@@ -30,6 +36,17 @@ public class RPCA_Test {
 		  }
 	  }
 	  return testOutput;
+  }
+
+  @Test
+  public void testMatrixApproximatelyEquals() {
+      final double[] ts1 = new double[] { 1.0, 0.0, 0.0, 1.0 };
+      final double[] ts2 = new double[] { 1.0, 0.0, 0.0, 1.0 , 0.0, 0.0};
+
+      final double[][] X1 = VectorToMatrix(ts1, 2, 2);
+      final double[][] X2 = VectorToMatrix(ts1, 2, 3);
+
+      assertFalse(MatrixApproximatelyEquals(X1, X2, 0.0));
   }
   
   @Test
