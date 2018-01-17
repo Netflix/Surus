@@ -1,3 +1,5 @@
+[![NetflixOSS Lifecycle](https://img.shields.io/osslifecycle/Netflix/Surus.svg)]()
+
 # Surus
 
 A collection of tools for analysis in Pig and Hive.
