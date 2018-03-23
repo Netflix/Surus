@@ -178,7 +178,7 @@ public class RAD extends EvalFunc<DataBag> {
 			if (this.isForceDiff == null && dickeyFullerTest.isNeedsDiff()) {
 				// Auto Diff
 				inputArrayTransformed = dickeyFullerTest.getZeroPaddedDiff();
-			} else if (this.isForceDiff) {
+			} else if (Boolean.TRUE.equals(this.isForceDiff)) {
 				// Force Diff
 				inputArrayTransformed = dickeyFullerTest.getZeroPaddedDiff();
 			}
